@@ -1,0 +1,50 @@
+endpoint: 'FooService'
+paths:
+  - path:
+      verb: 'GET'
+      uri: '/foo/{}'
+      response_code: 200
+      requests_per_second: 5
+      response_time:
+        average: 0.5
+        delta: 0.4
+      percent_spike: 2
+      spike:
+        average: 8.0
+        delta: 2.0
+      percent_error: 5
+      error_codes:
+        - 404
+        - 500
+  - path:
+      verb: 'POST'
+      uri: '/foo'
+      response_code: 201
+      requests_per_second: 1
+      response_time:
+        average: 0.75
+        delta: 0.3
+      percent_spike: 1
+      spike:
+        average: 10.0
+        delta: 2.0
+      percent_error: 10
+      error_codes:
+        - 500
+  - path:
+      verb: 'PUT'
+      uri: '/foo/{}'
+      response_code: 200
+      requests_per_second: 2
+      response_time:
+        average: 0.5
+        delta: 0.3
+      percent_spike: 2
+      spike:
+        average: 12.0
+        delta: 4.0
+      percent_error: 7
+      error_codes:
+        - 400
+        - 409
+        - 404

@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simulatedservice-deployment
+  labels:
+    app: simulatedservice
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: simulatedservice
+  template:
+    metadata:
+      labels:
+        app: simulatedservice
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/path: '/'
+        prometheus.io/port: '8000'
+    spec:
+      containers:
+        - name: simulatedservice
+          image: simulatedservice-service:latest
+          imagePullPolicy: Never
+          ports:
+          - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: simulatedservice-service
+  labels:
+    app: simulatedservice
+spec:
+  type: NodePort
+  selector:
+    app: simulatedservice
+  ports:
+    - name: metrics
+      port: 8000
+      targetPort: 8000
+      nodePort: 30900
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    serviceMonitorSelector: prometheus
+  name: simulatedservice-servicemonitor
+  namespace: default
+spec:
+  endpoints:
+  - interval: 30s
+    targetPort: 8000
+    path: /
+  namespaceSelector:
+    matchNames:
+    - default
+  selector:
+    matchLabels:
+      app: "simulatedservice"
